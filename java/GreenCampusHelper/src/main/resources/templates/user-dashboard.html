@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>My Dashboard - Green Campus Helper</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <script>
+        function updatePoints() {
+            const pointsMap = {
+                'Walking/Cycling': 10,
+                'Save Electricity': 15,
+                'Reusable Materials': 12,
+                'Plant Trees': 25,
+                'Reduce Plastic': 10,
+                'Public Transport': 8
+            };
+            const type = document.getElementById('activityType').value;
+            document.getElementById('points').value = pointsMap[type] || 0;
+            document.getElementById('pointsDisplay').innerText = (pointsMap[type] || 0) + " Points";
+        }
+    </script>
+</head>
+
+<body>
+    <nav class="navbar">
+        <a href="#" class="logo">🌿 Green Campus Helper</a>
+        <div>
+            <span th:text="${user.name}">User</span> |
+            <a href="/logout" class="logout-link">Logout</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- User Info Card -->
+        <div class="card">
+            <h2>Welcome, <span th:text="${user.name}"></span>!</h2>
+            <p><strong>Role:</strong> <span th:text="${user.displayRole()}"></span></p>
+            <div class="stat-number" style="text-align: left; margin-top: 10px;">
+                Total Green Points: <span th:text="${totalPoints}">0</span>
+            </div>
+        </div>
+
+        <!-- Log Activity Section -->
+        <div class="card">
+            <h3>📝 Log New Geo-Friendly Activity</h3>
+            <form action="/user/log-activity" method="post" class="activity-form">
+                <select id="activityType" name="activityType" onchange="updatePoints()" style="flex: 2;">
+                    <option value="" disabled selected>Select Activity...</option>
+                    <option value="Walking/Cycling">Walking or Cycling (10 pts)</option>
+                    <option value="Save Electricity">Saving Electricity (15 pts)</option>
+                    <option value="Reusable Materials">Using Reusable Materials (12 pts)</option>
+                    <option value="Plant Trees">Planting Trees (25 pts)</option>
+                    <option value="Reduce Plastic">Reducing Plastic Usage (10 pts)</option>
+                    <option value="Public Transport">Using Public Transport (8 pts)</option>
+                </select>
+                <input type="hidden" id="points" name="points" value="0">
+                <span id="pointsDisplay" style="font-weight: bold; color: var(--secondary-color); width: 100px;">0
+                    Points</span>
+                <button type="submit" style="flex: 1;">Log Activity</button>
+            </form>
+        </div>
+
+        <!-- Activity History -->
+        <div class="card">
+            <h3>📜 Your Activity History</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Activity</th>
+                        <th>Points</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="activity : ${activities}">
+                        <td th:text="${activity.date}">Date</td>
+                        <td th:text="${activity.activityType}">Type</td>
+                        <td th:text="${activity.points}">0</td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(activities)}">
+                        <td colspan="3" style="text-align: center;">No activities logged yet. Start today!</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+
+</html>

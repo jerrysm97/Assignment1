@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Admin Dashboard - Green Campus Helper</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+    <nav class="navbar">
+        <a href="#" class="logo">🛡️ Green Campus Admin</a>
+        <div>
+            <span th:text="${user.name}">Admin</span> |
+            <a href="/logout" class="logout-link">Logout</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- Admin Info & System Status -->
+        <div class="card">
+            <h2>Admin Dashboard</h2>
+            <p><strong>Role Status:</strong> <span th:text="${roleDescription}"></span></p>
+            <p style="color: var(--secondary-color);"><em><span th:text="${reportMessage}"></span></em></p>
+        </div>
+
+        <!-- System Stats -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h3>Total Activities</h3>
+                <div class="stat-number" th:text="${stats.totalActivities}">0</div>
+            </div>
+            <div class="stat-card">
+                <h3>Total Campus Points</h3>
+                <div class="stat-number" th:text="${stats.totalPoints}">0</div>
+            </div>
+            <div class="stat-card">
+                <h3>Most Popular Action</h3>
+                <div class="stat-number" style="font-size: 1.2em;" th:text="${stats.mostPopularActivity}">None</div>
+            </div>
+        </div>
+
+        <!-- All Activities Table -->
+        <div class="card">
+            <h3>🌍 All Campus Activities</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>User</th>
+                        <th>Activity</th>
+                        <th>Date</th>
+                        <th>Points</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="activity : ${activities}">
+                        <td th:text="${activity.user.name}">User</td>
+                        <td th:text="${activity.activityType}">Type</td>
+                        <td th:text="${activity.date}">Date</td>
+                        <td th:text="${activity.points}">0</td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(activities)}">
+                        <td colspan="4" style="text-align: center;">No activities found in the system.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+
+</html>
